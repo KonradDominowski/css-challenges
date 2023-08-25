@@ -1,0 +1,19 @@
+:root {
+  --main-color: black;
+  --main-color-dimmed: rgba(0, 0, 0, 0.3);
+}
+
+body {
+  max-width: 1900px;
+  margin-top: 0;
+  margin: auto;
+  background-color: rgb(245, 245, 245);
+}
+
+nav {
+  background-color: rgb(245, 245, 245);
+}
+
+.cm-focused {
+  outline: none !important;
+}

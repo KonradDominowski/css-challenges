@@ -1,0 +1,28 @@
+.main {
+	text-align: center;
+	margin-left: 1rem;
+	margin-right: 1rem;
+	margin-top: 2rem;
+
+	h1 {
+		font-size: 4.5rem;
+		line-height: 1;
+		font-weight: 400;
+		letter-spacing: -2px;
+
+		span {
+			font-weight: 700;
+		}
+	}
+
+
+	>p {
+		margin: 5rem;
+	}
+}
+
+.grid {
+	display: grid;
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+	gap: 1rem;
+}
