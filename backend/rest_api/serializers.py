@@ -35,4 +35,4 @@ class TopicSerializer(serializers.ModelSerializer):
 class TopicListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Topic
-        fields = ('id', 'title', 'slug', 'short_description',)
+        fields = ('id', 'title', 'slug', 'logo_url', 'short_description', 'is_ready')

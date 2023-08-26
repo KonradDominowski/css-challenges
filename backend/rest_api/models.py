@@ -41,9 +41,11 @@ class Chapter(models.Model):
 class Topic(models.Model):
     title = models.CharField(max_length=64, verbose_name='Topic title')
     slug = models.SlugField(max_length=64, null=False, unique=True)
+    logo_url = models.URLField(verbose_name='Logo URL')
     short_description = models.TextField()
     long_description = models.TextField()
     order = models.IntegerField(verbose_name='Topic order', unique=True)
+    is_ready = models.BooleanField(default=False)
 
     class Meta:
         ordering = ['order']

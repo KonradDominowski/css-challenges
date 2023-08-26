@@ -20,8 +20,11 @@ class TopicView(generics.GenericAPIView):
     serializer_class = TopicSerializer
     queryset = Topic.objects.all()
 
-    def get(self, request, pk):
-        query_set = Topic.objects.get(pk=pk)
+    def get(self, request, pk=0, slug=''):
+        if pk:
+            query_set = Topic.objects.get(pk=pk)
+        if slug:
+            query_set = Topic.objects.get(slug=slug)
         serializer = TopicSerializer(query_set, context={'request': request})
 
         return Response(serializer.data, status=status.HTTP_200_OK)

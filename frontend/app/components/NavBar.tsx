@@ -1,11 +1,10 @@
 "use client";
-
+import { Flex, Box, Button, HStack, useColorModeValue, SystemStyleObject } from "@chakra-ui/react";
 import Link from "next/link";
 import Image from "next/image";
-import { nunito } from "../layout";
 
-import { Flex, Box, Button, HStack, useColorModeValue, SystemStyleObject } from "@chakra-ui/react";
-
+import Providers from "../providers";
+import { nunito } from "./../layout";
 import styles from "./NavBar.module.scss";
 import alogo from "../../media/alogo.svg";
 
@@ -24,78 +23,80 @@ export default function NavBar() {
   };
 
   return (
-    <Flex
-      as="nav"
-      className={nunito.className}
-      align={"center"}
-      justify={"space-between"}
-      position={"sticky"}
-      top={0}
-      zIndex={10}
-      height={"4rem"}
-      fontWeight={700}
-      sx={navBorder}
-    >
-      <HStack>
-        <Link href={"/"}>
-          <Image className={styles.logo} src={alogo} alt="logo" />
-        </Link>
-        <HStack align={"center"} paddingLeft={"1rem"} fontSize={"medium"} spacing={2}>
-          <Box
-            as={"a"}
-            p={2}
-            href="#"
-            transition={"0.1s"}
-            color={linkColor}
-            _hover={{
-              color: linkColorHover,
-            }}
-          >
-            Link 1
-          </Box>
-          <Box
-            as={"a"}
-            p={2}
-            href="#"
-            transition={"0.1s"}
-            color={linkColor}
-            _hover={{
-              color: linkColorHover,
-            }}
-          >
-            Link 1
-          </Box>
-          <Box
-            as={"a"}
-            p={2}
-            href="#"
-            transition={"0.1s"}
-            color={linkColor}
-            _hover={{
-              color: linkColorHover,
-            }}
-          >
-            Link 1
-          </Box>
-          <Box
-            as={"a"}
-            p={2}
-            href="#"
-            transition={"0.1s"}
-            color={linkColor}
-            _hover={{
-              color: linkColorHover,
-            }}
-          >
-            Link 1
-          </Box>
+    <Providers>
+      <Flex
+        as="nav"
+        className={nunito.className}
+        align={"center"}
+        justify={"space-between"}
+        position={"sticky"}
+        top={0}
+        zIndex={10}
+        height={"4rem"}
+        fontWeight={700}
+        sx={navBorder}
+      >
+        <HStack>
+          <Link href={"/"}>
+            <Image className={styles.logo} src={alogo} alt="logo" />
+          </Link>
+          <HStack align={"center"} paddingLeft={"1rem"} fontSize={"medium"} spacing={2}>
+            <Box
+              as={"a"}
+              p={2}
+              href="#"
+              transition={"0.1s"}
+              color={linkColor}
+              _hover={{
+                color: linkColorHover,
+              }}
+            >
+              Link 1
+            </Box>
+            <Box
+              as={"a"}
+              p={2}
+              href="#"
+              transition={"0.1s"}
+              color={linkColor}
+              _hover={{
+                color: linkColorHover,
+              }}
+            >
+              Link 1
+            </Box>
+            <Box
+              as={"a"}
+              p={2}
+              href="#"
+              transition={"0.1s"}
+              color={linkColor}
+              _hover={{
+                color: linkColorHover,
+              }}
+            >
+              Link 1
+            </Box>
+            <Box
+              as={"a"}
+              p={2}
+              href="#"
+              transition={"0.1s"}
+              color={linkColor}
+              _hover={{
+                color: linkColorHover,
+              }}
+            >
+              Link 1
+            </Box>
+          </HStack>
         </HStack>
-      </HStack>
 
-      <div>
-        <Button>Sign in</Button>
-        <Button>Register</Button>
-      </div>
-    </Flex>
+        <div>
+          <Button>Sign in</Button>
+          <Button>Register</Button>
+        </div>
+      </Flex>
+    </Providers>
   );
 }
