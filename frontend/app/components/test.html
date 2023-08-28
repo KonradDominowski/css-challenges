@@ -1,0 +1,23 @@
+<html lang="en">
+
+<head>
+</head>
+
+<body class="testToImage">
+
+	<div>
+		<span id="test"></span>
+		<h1>This is a large heading</h1>
+		<h2>This is smaller heading</h2>
+		<h3>This is even smaller heading</h3>
+		<h4>This is even even smaller heading</h4>
+	</div>
+</body>
+<script defer>
+	console.log(document.body.scrollHeight)
+	console.log(getComputedStyle(document.body).height)
+	const test = document.getElementById('test')
+	test.innerHTML = "TEST"
+</script>
+
+</html>

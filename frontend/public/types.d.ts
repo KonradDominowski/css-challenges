@@ -3,14 +3,17 @@ interface Task {
   title: string;
   description: string;
   target: string;
-  updated: string;
+  updated?: string;
   order: number;
   chapter: number;
 }
 
 interface Chapter {
+  id: number;
   title: string;
   tasks: Task[];
+  order: number;
+  topic: number;
 }
 
 interface Topic {

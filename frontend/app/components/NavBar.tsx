@@ -44,14 +44,14 @@ export default function NavBar() {
             <Box
               as={"a"}
               p={2}
-              href="#"
+              href="/"
               transition={"0.1s"}
               color={linkColor}
               _hover={{
                 color: linkColorHover,
               }}
             >
-              Link 1
+              Home
             </Box>
             <Box
               as={"a"}
@@ -80,14 +80,14 @@ export default function NavBar() {
             <Box
               as={"a"}
               p={2}
-              href="#"
+              href="/create"
               transition={"0.1s"}
               color={linkColor}
               _hover={{
                 color: linkColorHover,
               }}
             >
-              Link 1
+              Add new task
             </Box>
           </HStack>
         </HStack>

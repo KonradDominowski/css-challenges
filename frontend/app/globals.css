@@ -18,3 +18,29 @@ nav {
 .cm-focused {
   outline: none !important;
 }
+
+.code {
+  font-family: monospace;
+  padding: 4px;
+  padding-left: 8px;
+  padding-right: 8px;
+  background-color: rgb(230, 230, 230);
+}
+
+::-webkit-scrollbar {
+  margin-left: 10px;
+  width: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: #ffffff00;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background: #bdbdbd;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #6e6e6e;
+}

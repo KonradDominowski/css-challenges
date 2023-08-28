@@ -24,8 +24,8 @@ export default function TopicOverview({ topic, params }: Props) {
 
       <Box py={4}>
         <Text>
-          In this topic, you will explore the basics of HTML. This topic consists of{" "}
-          <b>{topic.chapters!.length} chapters </b> totalling to <b>{taskNumber} tasks</b>.
+          {topic.long_description}. This topic consists of <b>{topic.chapters!.length} chapters </b> totalling to{" "}
+          <b>{taskNumber} tasks</b>.
         </Text>
 
         <Text fontSize={"1.5rem"} pt={3} pb={2}>
