@@ -53,11 +53,9 @@ export default function Challenge({ params, topic }: Props) {
           </Link>
         </Box>
       </Flex>
-      <p className={styles.description} id="description">
-        {task?.description}
-      </p>
+      <p className={styles.description} id="description" dangerouslySetInnerHTML={{ __html: task!.description }}></p>
       <div>
-        <Box minW={"300px"} maxW={"100%"} resize={"horizontal"} overflow={"auto"}>
+        <Box minW={"600px"} maxW={"100%"} resize={"horizontal"} overflow={"auto"}>
           <TargetAndOutput target={task!.target} output={srcDoc} />
         </Box>
         <CodeEditor HTMLcode={htmlCode} setHTMLCode={setHtmlCode} CSScode={cssCode} setCSSCode={setCssCode} />

@@ -14,6 +14,8 @@ export default async function ChallengeLayout({ params }: Props) {
   const topicData = fetchTopic(params.slug);
   const topic = await topicData;
 
+  console.log(topic);
+
   return (
     <main>
       <Sidebar topic={topic} params={params} />

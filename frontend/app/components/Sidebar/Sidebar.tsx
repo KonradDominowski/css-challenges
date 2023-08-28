@@ -20,7 +20,6 @@ import {
 } from "@chakra-ui/react";
 import { MdCheckCircle } from "react-icons/md";
 import { Challenge } from "@/public/challenges";
-import Chapter from "./Chapter";
 
 interface Props {
   topic: Challenge;
@@ -38,6 +37,7 @@ export default function Sidebar({ topic, params }: Props) {
       <List>
         {topic.chapters.map((chapter) => (
           <ListItem
+            key={chapter.id}
             as={"span"}
             color={"gray.600"}
             fontWeight={500}
@@ -53,6 +53,7 @@ export default function Sidebar({ topic, params }: Props) {
             <List>
               {chapter.tasks.map((task) => (
                 <Button
+                  key={task.id}
                   as={"a"}
                   href={`${task.id}`}
                   h={9}
@@ -70,7 +71,7 @@ export default function Sidebar({ topic, params }: Props) {
                   _active={{ backgroundColor: "rgb(235, 235, 235)" }}
                   isActive={+params.id === task.id}
                 >
-                  <ListItem display={"flex"} gap={2}>
+                  <ListItem key={task.id} display={"flex"} gap={2}>
                     <Icon as={MdCheckCircle} color={"green.500"} /> {task.title}
                   </ListItem>
                 </Button>
