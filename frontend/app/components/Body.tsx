@@ -1,6 +1,6 @@
 "use client";
 
-import Providers from "./../providers";
+import Providers from "../providers/providers";
 import NavBar from "./../components/NavBar";
 import Section from "./Section";
 import styles from "./Body.module.scss";
