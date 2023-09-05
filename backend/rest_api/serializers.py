@@ -1,5 +1,13 @@
 from rest_framework import serializers
+from rest_framework.fields import SerializerMethodField
+
 from rest_api.models import *
+
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = '__all__'
 
 
 class TaskSerializer(serializers.ModelSerializer):
@@ -21,7 +29,7 @@ class NestedChapterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Chapter
-        fields = ('title', 'tasks')
+        fields = ('id', 'title', 'tasks')
 
 
 class TopicSerializer(serializers.ModelSerializer):
@@ -33,6 +41,18 @@ class TopicSerializer(serializers.ModelSerializer):
 
 
 class TopicListSerializer(serializers.ModelSerializer):
+    chapters = NestedChapterSerializer(many=True)
+
     class Meta:
         model = Topic
-        fields = ('id', 'title', 'slug', 'logo_url', 'short_description', 'is_ready')
+        fields = ('id', 'title', 'slug', 'logo_url', 'short_description', 'is_ready', 'chapters')
+
+
+#####################################
+# This section is for the UserTasks #
+#####################################
+
+class TasksUsersSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserTask
+        fields = ('id', 'user', 'task', 'html_code', 'css_code', 'completed')
