@@ -1,19 +1,16 @@
 "use client";
-import { Flex, Box, Button, HStack, useColorModeValue, SystemStyleObject } from "@chakra-ui/react";
+import { Flex, Box, HStack, useColorModeValue, SystemStyleObject } from "@chakra-ui/react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import Image from "next/image";
 
-import Providers from "../providers/providers";
 import { nunito } from "./../layout";
 import styles from "./NavBar.module.scss";
 import alogo from "../../media/alogo.svg";
 import { SignInButton, SignOutButton } from "./Buttons";
 
 export default function NavBar() {
-  const { data: session, status } = useSession();
-  console.log(session);
-  console.log(status);
+  const { status } = useSession();
 
   const linkColor = useColorModeValue("rgb(100, 100, 100)", "rgb(240,240,240)");
   const linkColorHover = useColorModeValue("rgb(0, 0, 0)", "rgb(255,255,255)");
@@ -97,8 +94,9 @@ export default function NavBar() {
         </HStack>
       </HStack>
 
-      <Flex>
+      <Flex align={"center"} gap={2}>
         <SignInButton />
+
         {status === "authenticated" && <SignOutButton />}
       </Flex>
     </Flex>

@@ -1,13 +1,13 @@
 "use client";
 
-import { Button } from "@chakra-ui/react";
-import { useSession, signIn, signOut } from "next-auth/react";
+import customSignOut from "@/functions/customSignOut";
+import { Avatar, Button } from "@chakra-ui/react";
+import { useSession, signIn } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 
 export function SignInButton() {
   const { data: session, status } = useSession();
-  console.log(session, status);
 
   if (status === "loading") {
     return <>...</>;
@@ -16,7 +16,7 @@ export function SignInButton() {
   if (status === "authenticated") {
     return (
       <Link href={`/dashboard`}>
-        <Image src={session.user?.image ?? "/mememan.webp"} width={32} height={32} alt="Your Name" />
+        <Avatar name={session.user?.image!} src={session.user?.image!} size={"sm"} />
       </Link>
     );
   }
@@ -25,5 +25,5 @@ export function SignInButton() {
 }
 
 export function SignOutButton() {
-  return <Button onClick={() => signOut()}>Sign out</Button>;
+  return <Button onClick={() => customSignOut()}>Sign out</Button>;
 }
