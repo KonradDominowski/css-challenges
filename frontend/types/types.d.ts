@@ -8,6 +8,15 @@ interface Task {
   chapter: number;
 }
 
+interface TaskData {
+  id: number;
+  user: number;
+  task: number;
+  htmlCode: string;
+  cssCode: string;
+  completed: boolean;
+}
+
 interface Chapter {
   id: number;
   title: string;

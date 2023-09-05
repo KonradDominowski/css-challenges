@@ -33,7 +33,7 @@ export default function TopicOverview({ topic, params }: Props) {
         </Text>
         <UnorderedList>
           {topic.chapters!.map((chapter) => (
-            <ListItem key={topic.id}>{chapter.title}</ListItem>
+            <ListItem key={chapter.id}>{chapter.title}</ListItem>
           ))}
         </UnorderedList>
         <Button as={"a"} href={`${topic.slug}/challenge/1`} my={3} size={"lg"} colorScheme={"green"}>

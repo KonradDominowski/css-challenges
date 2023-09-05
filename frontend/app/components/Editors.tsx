@@ -77,7 +77,6 @@ function HTMLEditor({ code, setCode }: Props) {
   );
 }
 
-// TODO - Ten Theme nie działa w edytorze CSS
 function CSSEditor({ code, setCode }: Props) {
   const handleChange = (input: string) => {
     setCode(input);
