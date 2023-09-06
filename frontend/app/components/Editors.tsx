@@ -28,9 +28,9 @@ interface Props {
 
 interface JoinedProps {
   HTMLcode: string;
-  setHTMLCode: React.Dispatch<React.SetStateAction<string>>;
+  setHTMLcode: React.Dispatch<React.SetStateAction<string>>;
   CSScode: string;
-  setCSSCode: React.Dispatch<React.SetStateAction<string>>;
+  setCSScode: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const myTheme = createTheme({
@@ -77,7 +77,6 @@ function HTMLEditor({ code, setCode }: Props) {
   );
 }
 
-// TODO - Ten Theme nie działa w edytorze CSS
 function CSSEditor({ code, setCode }: Props) {
   const handleChange = (input: string) => {
     setCode(input);
@@ -100,7 +99,7 @@ function CSSEditor({ code, setCode }: Props) {
   );
 }
 
-export default function CodeEditor({ HTMLcode, setHTMLCode, CSScode, setCSSCode }: JoinedProps) {
+export default function CodeEditor({ HTMLcode, setHTMLcode, CSScode, setCSScode }: JoinedProps) {
   const [isSplit, setIsSplit] = useState(false);
 
   const toggleSplit = () => {
@@ -137,10 +136,10 @@ export default function CodeEditor({ HTMLcode, setHTMLCode, CSScode, setCSSCode 
           <TabIndicator mt="-1.5px" height="2px" bg="blue.500" borderRadius="1px" />
           <TabPanels>
             <TabPanel>
-              <HTMLEditor code={HTMLcode} setCode={setHTMLCode} />
+              <HTMLEditor code={HTMLcode} setCode={setHTMLcode} />
             </TabPanel>
             <TabPanel>
-              <CSSEditor code={CSScode} setCode={setCSSCode} />
+              <CSSEditor code={CSScode} setCode={setCSScode} />
             </TabPanel>
           </TabPanels>
         </Tabs>
@@ -154,7 +153,7 @@ export default function CodeEditor({ HTMLcode, setHTMLCode, CSScode, setCSSCode 
               <TabIndicator mt="-1.5px" height="2px" bg="blue.500" borderRadius="1px" />
               <TabPanels>
                 <TabPanel>
-                  <HTMLEditor code={HTMLcode} setCode={setHTMLCode} />
+                  <HTMLEditor code={HTMLcode} setCode={setHTMLcode} />
                 </TabPanel>
               </TabPanels>
             </Tabs>
@@ -179,7 +178,7 @@ export default function CodeEditor({ HTMLcode, setHTMLCode, CSScode, setCSSCode 
               <TabIndicator mt="-1.5px" height="2px" bg="blue.500" borderRadius="1px" />
               <TabPanels>
                 <TabPanel>
-                  <CSSEditor code={CSScode} setCode={setCSSCode} />
+                  <CSSEditor code={CSScode} setCode={setCSScode} />
                 </TabPanel>
               </TabPanels>
             </Tabs>

@@ -11,14 +11,26 @@ interface Props {
   setTitle: React.Dispatch<React.SetStateAction<string>>;
   description: string;
   setDescription: React.Dispatch<React.SetStateAction<string>>;
+  HTMLcode: string;
+  setHTMLcode: React.Dispatch<React.SetStateAction<string>>;
+  CSScode: string;
+  setCSScode: React.Dispatch<React.SetStateAction<string>>;
   srcDoc: string;
   setSrcDoc: React.Dispatch<React.SetStateAction<string>>;
 }
 
-export default function ChallengeForm({ title, setTitle, description, setDescription, srcDoc, setSrcDoc }: Props) {
-  const [HTMLcode, setHTMLCode] = useState<string>("");
-  const [CSScode, setCSSCode] = useState<string>("");
-
+export default function ChallengeForm({
+  title,
+  setTitle,
+  description,
+  setDescription,
+  srcDoc,
+  setSrcDoc,
+  HTMLcode,
+  setHTMLcode,
+  CSScode,
+  setCSScode,
+}: Props) {
   useEffect(() => {
     const timeout = setTimeout(() => {
       setSrcDoc(`
@@ -67,7 +79,7 @@ export default function ChallengeForm({ title, setTitle, description, setDescrip
           </Card>
         </Box>
         <VisuallyHiddenInput type="text" name="target" readOnly value={srcDoc} />
-        <CodeEditor HTMLcode={HTMLcode} setHTMLCode={setHTMLCode} CSScode={CSScode} setCSSCode={setCSSCode} />
+        <CodeEditor HTMLcode={HTMLcode} setHTMLcode={setHTMLcode} CSScode={CSScode} setCSScode={setCSScode} />
       </div>
     </div>
   );

@@ -36,6 +36,7 @@ export default function SidebarForm({
   setTaskOrder,
 }: Props) {
   const { pending } = useFormStatus();
+
   const [maxOrder, setMaxOrder] = useState<number>(0);
 
   // If task is taken, disable it in the dropdown list

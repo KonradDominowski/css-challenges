@@ -1,12 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 
-import SidebarForm from "@/app/components/TaskForm/SidebarForm";
-import ChallengeForm from "@/app/components/TaskForm/ChallengeForm";
+import SidebarForm from "@/app/create/TaskForm/SidebarForm";
+import ChallengeForm from "@/app/create/TaskForm/ChallengeForm";
 import createTask from "@/app/create/actions";
 import { useToast } from "@chakra-ui/react";
+import { revalidatePath } from "next/cache";
 
 interface data {
   title: string;
@@ -17,7 +17,6 @@ interface data {
 }
 
 export default function TaskForm({ topics, chapters }: { topics: Topic[]; chapters: Chapter[] }) {
-  const router = useRouter();
   const toast = useToast();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -26,6 +25,16 @@ export default function TaskForm({ topics, chapters }: { topics: Topic[]; chapte
   const [chapterID, setChapterID] = useState(0);
   const [taskOrder, setTaskOrder] = useState(0);
   const [formIsFilled, setFormIsFilled] = useState(false);
+  const [HTMLcode, setHTMLcode] = useState<string>("");
+  const [CSScode, setCSScode] = useState<string>("");
+
+  const clearForm = () => {
+    setChapterID(0);
+    setTitle("");
+    setDescription("");
+    setHTMLcode("");
+    setCSScode("");
+  };
 
   async function onCreateTask(formData: FormData) {
     const res = await createTask(formData);
@@ -39,6 +48,8 @@ export default function TaskForm({ topics, chapters }: { topics: Topic[]; chapte
         duration: 9000,
         isClosable: true,
       });
+
+      clearForm();
     } else {
       toast({
         position: "top",
@@ -79,6 +90,10 @@ export default function TaskForm({ topics, chapters }: { topics: Topic[]; chapte
         setDescription={setDescription}
         srcDoc={srcDoc}
         setSrcDoc={setSrcDoc}
+        HTMLcode={HTMLcode}
+        setHTMLcode={setHTMLcode}
+        CSScode={CSScode}
+        setCSScode={setCSScode}
       />
     </form>
   );

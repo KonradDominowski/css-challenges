@@ -1,7 +1,9 @@
-import Sidebar from "@/app/components/Sidebar/Sidebar";
+import { getServerSession } from "next-auth/next";
 
-import Challenge from "@/app/components/Challenge/Challenge";
 import fetchTopic from "@/functions/fetchTopic";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import Sidebar from "@/app/[slug]/challenge/[id]/Challenge/Sidebar/Sidebar";
+import Challenge from "@/app/[slug]/challenge/[id]/Challenge/Main/Challenge";
 
 interface Props {
   params: {
@@ -11,15 +13,33 @@ interface Props {
 }
 
 export default async function ChallengeLayout({ params }: Props) {
+  const session = await getServerSession(authOptions);
+
+  let tasksData: TaskData[] | undefined = undefined;
+
+  if (session) {
+    const response = await fetch("http://localhost:8000/api/tasks-users/", {
+      headers: {
+        Authorization: `Bearer ${session.accessToken}`,
+      },
+      next: { tags: ["userTasks"] },
+    });
+
+    tasksData = await response.json();
+  }
+
   const topicData = fetchTopic(params.slug);
   const topic = await topicData;
 
-  console.log(topic);
-
   return (
     <main>
-      <Sidebar topic={topic} params={params} />
-      <Challenge topic={topic} params={params} />
+      <Sidebar topic={topic} tasksData={tasksData} params={params} />
+      <Challenge
+        topic={topic}
+        taskData={tasksData?.find((el) => +el.task === +params.id)}
+        params={params}
+        session={session}
+      />
     </main>
   );
 }

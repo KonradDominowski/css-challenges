@@ -37,8 +37,12 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_api',
     'rest_framework',
+    'django_extensions',
     'livereload',
     'corsheaders',
+    'oauth2_provider',
+    'social_django',
+    'drf_social_oauth2',
 ]
 
 MIDDLEWARE = [
@@ -66,6 +70,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect',
             ],
         },
     },
@@ -129,4 +135,30 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:8080",
     "http://localhost:3000",
+]
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
+        'drf_social_oauth2.authentication.SocialAuthentication',
+    ),
+}
+
+AUTHENTICATION_BACKENDS = (
+    # GitHub OAuth2
+    'social_core.backends.github.GithubOAuth2',
+
+    # Google  OAuth2
+    'social_core.backends.google.GoogleOAuth2',
+
+    'drf_social_oauth2.backends.DjangoOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = 'qBVTiK5paVkdeOuWaZwKhbm6UgsSdgtWZ0QUKzso'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'c0SyFCZkynfHfIF3FAdkhQvchopnUEEfmH96na1mb7x8sNltgg1cYiF8GeK3dOYl3Yi0K1IPd5bAMyFvKGj6PTQ1dr87sgBkojvyiZl0ZEoWMP3KdFnTredAuYpBkGOU'
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
+    'https://www.googleapis.com/auth/userinfo.email',
+    'https://www.googleapis.com/auth/userinfo.profile',
 ]

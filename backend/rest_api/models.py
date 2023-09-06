@@ -1,8 +1,8 @@
 from django.db import models
 from django.utils.text import slugify
+from django.contrib.auth.models import User
 
 
-# Create your models here.
 class Task(models.Model):
     title = models.CharField(max_length=64, verbose_name='Task title')
     description = models.TextField(verbose_name='Task description')
@@ -10,6 +10,7 @@ class Task(models.Model):
     updated = models.DateTimeField(auto_now=True)
     chapter = models.ForeignKey('Chapter', on_delete=models.CASCADE, related_name='tasks')
     order = models.IntegerField(verbose_name='Task order')
+    user = models.ManyToManyField(User, related_name='users', through='UserTask')
 
     class Meta:
         unique_together = ['chapter', 'order']
@@ -20,6 +21,20 @@ class Task(models.Model):
 
     def __str__(self):
         return f'{self.chapter} - {self.title}'
+
+
+class UserTask(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    task = models.ForeignKey(Task, on_delete=models.CASCADE)
+    html_code = models.TextField(verbose_name='HTML code', blank=True)
+    css_code = models.TextField(verbose_name='CSS Code', blank=True)
+    completed = models.BooleanField(default=False)
+
+    class Meta:
+        unique_together = ['user', 'task']
+
+    def __str__(self):
+        return f'{self.user} - {self.task}'
 
 
 class Chapter(models.Model):
