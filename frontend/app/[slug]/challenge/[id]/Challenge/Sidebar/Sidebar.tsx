@@ -16,8 +16,8 @@ interface Props {
 export default function Sidebar({ topic, params, tasksData }: Props) {
   return (
     <nav className={styles.sidebar}>
-      <Text as={"span"} color={"gray.700"} py={2} px={4} display={"flex"} justifyContent={"left"} fontWeight={500}>
-        HTML Basics
+      <Text as={"span"} color={"gray.700"} py={2} px={4} display={"flex"} justifyContent={"left"} fontWeight={600}>
+        {topic?.title}
       </Text>
       <List>
         {topic?.chapters?.map((chapter) => (
@@ -26,7 +26,7 @@ export default function Sidebar({ topic, params, tasksData }: Props) {
             as={"span"}
             color={"gray.600"}
             fontWeight={500}
-            py={2}
+            py={1}
             display={"flex"}
             justifyContent={"center"}
             alignItems={"left"}

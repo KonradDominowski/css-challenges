@@ -19,6 +19,7 @@ export default async function Home() {
       headers: {
         Authorization: `Bearer ${session.accessToken}`,
       },
+      next: { tags: ["userTasks"] },
     });
 
     tasksData = await response.json();

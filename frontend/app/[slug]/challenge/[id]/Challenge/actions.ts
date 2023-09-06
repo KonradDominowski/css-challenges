@@ -1,14 +1,17 @@
 "use server";
 
-import { Session, getServerSession } from "next-auth";
-import { revalidatePath } from "next/cache";
+import { Session } from "next-auth";
+import { revalidatePath, revalidateTag } from "next/cache";
 
-export async function createCompleteStatus(formData: FormData, session: Session) {
+// TODO - handle the case where user is not logged in - maybe save the tasks to localstorage or smth
+export async function createCompleteStatus(formData: FormData, session: Session | null) {
   const data = Object.fromEntries(formData);
 
-  console.log("form action is sent");
-
   let taskData;
+
+  if (!session) {
+    return { message: "Sign in", status: "notLoggedIn" };
+  }
 
   try {
     if (data.id) {
@@ -50,6 +53,7 @@ export async function createCompleteStatus(formData: FormData, session: Session)
       if (!res.ok) throw new Error("Failed submitting task");
     }
 
+    revalidateTag("userTasks");
     return { message: "Success!", status: "success" };
   } catch (e) {
     return { message: "Failed", status: "failed" };

@@ -2,8 +2,8 @@ import { getServerSession } from "next-auth/next";
 
 import fetchTopic from "@/functions/fetchTopic";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import Sidebar from "@/app/components/Challenge/Sidebar/Sidebar";
-import Challenge from "@/app/components/Challenge/Main/Challenge";
+import Sidebar from "@/app/[slug]/challenge/[id]/Challenge/Sidebar/Sidebar";
+import Challenge from "@/app/[slug]/challenge/[id]/Challenge/Main/Challenge";
 
 interface Props {
   params: {
@@ -22,6 +22,7 @@ export default async function ChallengeLayout({ params }: Props) {
       headers: {
         Authorization: `Bearer ${session.accessToken}`,
       },
+      next: { tags: ["userTasks"] },
     });
 
     tasksData = await response.json();
