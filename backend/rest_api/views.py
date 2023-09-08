@@ -1,7 +1,7 @@
 from rest_framework.response import Response
 
 from rest_api.serializers import *
-from rest_framework import generics, status, permissions
+from rest_framework import generics, status
 
 
 class TopicListView(generics.GenericAPIView):
@@ -40,7 +40,6 @@ class TasksUsersView(generics.GenericAPIView):
     def get(self, request):
         user = request.user
         query_set = UserTask.objects.filter(user__in=[user.id])
-        print(query_set)
         serializer = TasksUsersSerializer(query_set, many=True, context={'request': request})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -49,7 +48,6 @@ class TasksUsersView(generics.GenericAPIView):
         data = request.data
         data['user'] = user.id
 
-        print(data)
         serializer = TasksUsersSerializer(data=data, context={'request': request})
 
         if serializer.is_valid():
@@ -72,7 +70,6 @@ class UserTaskUpdateView(generics.GenericAPIView):
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
-        print(serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 

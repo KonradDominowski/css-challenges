@@ -148,7 +148,7 @@ AUTHENTICATION_BACKENDS = (
     # GitHub OAuth2
     'social_core.backends.github.GithubOAuth2',
 
-    # Google  OAuth2
+    # Google OAuth2
     'social_core.backends.google.GoogleOAuth2',
 
     'drf_social_oauth2.backends.DjangoOAuth2',
@@ -157,6 +157,9 @@ AUTHENTICATION_BACKENDS = (
 
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = 'qBVTiK5paVkdeOuWaZwKhbm6UgsSdgtWZ0QUKzso'
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'c0SyFCZkynfHfIF3FAdkhQvchopnUEEfmH96na1mb7x8sNltgg1cYiF8GeK3dOYl3Yi0K1IPd5bAMyFvKGj6PTQ1dr87sgBkojvyiZl0ZEoWMP3KdFnTredAuYpBkGOU'
+
+SOCIAL_AUTH_GITHUB_KEY = 'QXLNAlxYfTA7kZQpE9wHZEAKxQwPmqOt198GiEq7'
+SOCIAL_AUTH_GITHUB_SECRET = 'st4NhXLxWh3vRVa80Wo5d58PYq6gTbXfnNbNE8IfmHTJDEaYOOJSxDtTfV3ZfFv26R4Vp5fEFzf0iJ4o6LHnTVfAuxOfAui89usPo72vUT9FEuSQZpk7NmVnZKlpeGYF'
 
 SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
     'https://www.googleapis.com/auth/userinfo.email',

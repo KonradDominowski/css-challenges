@@ -10,6 +10,11 @@ const axiosInstance = axios.create({
   timeout: 5000,
 });
 
+const provider = {
+  github: "github",
+  google: "google-oauth2",
+};
+
 export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET!,
   providers: [
@@ -25,10 +30,11 @@ export const authOptions: NextAuthOptions = {
   // TODO - Dodać obsługę githuba przy logowaniu w callbackach
   callbacks: {
     async jwt({ token, account, user }) {
+      console.log(account?.provider);
       if (account) {
         const response = await axiosInstance.post("http://localhost:8000/auth/convert-token/", {
           token: account?.access_token,
-          backend: "google-oauth2",
+          backend: provider[account.provider],
           grant_type: "convert_token",
           client_id: process.env.DJANGO_ID,
           client_secret: process.env.DJANGO_SECRET,
