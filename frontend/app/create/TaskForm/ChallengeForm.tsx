@@ -39,7 +39,7 @@ export default function ChallengeForm({
           <style>${CSScode}</style>
         </html>
       `);
-    }, 250);
+    }, 50);
 
     return () => clearTimeout(timeout);
   }, [HTMLcode, CSScode]);

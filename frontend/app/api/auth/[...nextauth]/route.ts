@@ -29,7 +29,6 @@ export const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     async jwt({ token, account, user }) {
-      console.log(account?.provider);
       if (account) {
         const response = await axiosInstance.post("http://localhost:8000/auth/convert-token/", {
           token: account?.access_token,

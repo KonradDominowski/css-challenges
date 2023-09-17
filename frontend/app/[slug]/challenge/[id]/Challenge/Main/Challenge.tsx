@@ -21,15 +21,37 @@ interface Props {
   };
 }
 
-// TODO - set the initial value to state loaded from database for the completed tasks
 // TODO - Kiedy się kliknie na opis, może się zwinąć
 // TODO - link do następnego i poprzedniego challengu kieruje na ID w bazie danych, na razie ono istnieje ale kiedyś mogą się pojebać, może zamiast id uży pola order
 export default function Challenge({ params, topic, taskData, session }: Props) {
   const [HTMLcode, setHTMLcode] = useState<string>(taskData?.html_code || "");
   const [CSScode, setCSScode] = useState<string>(taskData?.css_code || "");
   const [srcDoc, setSrcDoc] = useState<string>("");
+  const [showDesc, setShowDesc] = useState(true);
 
   const task = topic.chapters!.flatMap((chapter) => chapter.tasks).find((task) => task.id === +params.id);
+
+  function getNextTaskId(): string | undefined {
+    const tasks = topic.chapters?.flatMap((chapter) => chapter.tasks);
+    const currentIndex = tasks.indexOf(task);
+
+    if (currentIndex + 1 === tasks?.length) {
+      return undefined;
+    }
+
+    return tasks[currentIndex + 1].id.toString();
+  }
+
+  function getPreviousTaskId(): string | undefined {
+    const tasks = topic.chapters?.flatMap((chapter) => chapter.tasks);
+    const currentIndex = tasks.indexOf(task);
+
+    if (currentIndex === 0) {
+      return undefined;
+    }
+
+    return tasks[currentIndex - 1].id.toString();
+  }
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -39,7 +61,7 @@ export default function Challenge({ params, topic, taskData, session }: Props) {
         <style>${CSScode}</style>
       </html>
     `);
-    }, 250);
+    }, 50);
 
     return () => clearTimeout(timeout);
   }, [HTMLcode, CSScode]);
@@ -50,12 +72,29 @@ export default function Challenge({ params, topic, taskData, session }: Props) {
         <Flex alignItems={"center"} justify={"space-between"}>
           <h1>{task!.title}</h1>
           <Flex>
-            <IconButton as={"a"} href={`${+params.id - 1}`} aria-label="" icon={<ArrowLeftIcon />} />
+            <IconButton
+              as={"a"}
+              href={getPreviousTaskId()}
+              isDisabled={!getPreviousTaskId()}
+              aria-label=""
+              icon={<ArrowLeftIcon />}
+            />
             <SubmitButton completed={taskData?.completed} />
-            <IconButton as={"a"} href={`${+params.id - 1}`} aria-label="" icon={<ArrowRightIcon />} />
+            <IconButton
+              as={"a"}
+              href={getNextTaskId()}
+              isDisabled={!getNextTaskId()}
+              aria-label=""
+              icon={<ArrowRightIcon />}
+            />
           </Flex>
         </Flex>
-        <p className={styles.description} id="description" dangerouslySetInnerHTML={{ __html: task!.description }}></p>
+        <p
+          className={showDesc ? `${styles.description}` : `${styles.description} ${styles.hidden}`}
+          onClick={() => setShowDesc((state) => !state)}
+          id="description"
+          dangerouslySetInnerHTML={{ __html: showDesc ? task!.description : task!.description.slice(0, 60) }}
+        ></p>
         <div>
           <Box minW={"600px"} maxW={"100%"} resize={"horizontal"} overflow={"auto"}>
             <TargetAndOutput target={task!.target} output={srcDoc} />
