@@ -1,8 +1,9 @@
 "use client";
 import styles from "./Sidebar.module.scss";
 
-import { Text, List, ListItem, Button, Icon } from "@chakra-ui/react";
+import { Text, List, ListItem, Button, Icon, Spinner } from "@chakra-ui/react";
 import { MdCheckCircle, MdCheckCircleOutline } from "react-icons/md";
+import { experimental_useFormStatus as useFormStatus } from "react-dom";
 
 interface Props {
   topic: Topic | undefined;
@@ -14,6 +15,8 @@ interface Props {
 }
 
 export default function Sidebar({ topic, params, tasksData }: Props) {
+  const { pending } = useFormStatus();
+
   return (
     <nav className={styles.sidebar}>
       <Text as={"span"} color={"gray.700"} py={2} px={4} display={"flex"} justifyContent={"left"} fontWeight={600}>
@@ -61,6 +64,7 @@ export default function Sidebar({ topic, params, tasksData }: Props) {
                   >
                     <ListItem key={task.id} display={"flex"} gap={2}>
                       <Icon as={completed ? MdCheckCircle : MdCheckCircleOutline} color={"green.500"} /> {task.title}
+                      {pending && task.id === +params.id && <Spinner size={"xs"} position={"absolute"} right={"5px"} />}
                     </ListItem>
                   </Button>
                 );

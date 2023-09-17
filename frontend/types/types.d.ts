@@ -9,11 +9,11 @@ interface Task {
 }
 
 interface TaskData {
-  id: number;
-  user: number;
+  id?: number;
+  user?: number;
   task: number;
-  htmlCode: string;
-  cssCode: string;
+  html_code: string;
+  css_code: string;
   completed: boolean;
 }
 

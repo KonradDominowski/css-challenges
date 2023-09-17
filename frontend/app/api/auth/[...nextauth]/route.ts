@@ -27,7 +27,6 @@ export const authOptions: NextAuthOptions = {
       clientSecret: process.env.GOOGLE_SECRET!,
     }),
   ],
-  // TODO - Dodać obsługę githuba przy logowaniu w callbackach
   callbacks: {
     async jwt({ token, account, user }) {
       console.log(account?.provider);

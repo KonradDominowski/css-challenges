@@ -2,8 +2,7 @@ import { getServerSession } from "next-auth/next";
 
 import fetchTopic from "@/functions/fetchTopic";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import Sidebar from "@/app/[slug]/challenge/[id]/Challenge/Sidebar/Sidebar";
-import Challenge from "@/app/[slug]/challenge/[id]/Challenge/Main/Challenge";
+import ChallengePage from "@/app/[slug]/challenge/[id]/Challenge/ChallengePage";
 
 interface Props {
   params: {
@@ -29,17 +28,7 @@ export default async function ChallengeLayout({ params }: Props) {
   }
 
   const topicData = fetchTopic(params.slug);
-  const topic = await topicData;
+  const topic: Topic = await topicData;
 
-  return (
-    <main>
-      <Sidebar topic={topic} tasksData={tasksData} params={params} />
-      <Challenge
-        topic={topic}
-        taskData={tasksData?.find((el) => +el.task === +params.id)}
-        params={params}
-        session={session}
-      />
-    </main>
-  );
+  return <ChallengePage topic={topic} tasksData={tasksData} params={params} session={session} />;
 }
