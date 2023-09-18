@@ -58,7 +58,11 @@ export default function Challenge({ params, topic, taskData, session }: Props) {
       setSrcDoc(`
       <html lang="en">
         <body>${HTMLcode}</body>
-        <style>${CSScode}</style>
+        <style>
+        body {
+          background-color: white
+        }
+        ${CSScode}</style>
       </html>
     `);
     }, 50);

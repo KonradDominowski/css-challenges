@@ -36,7 +36,12 @@ export default function ChallengeForm({
       setSrcDoc(`
         <html lang="en">
           <body>${HTMLcode}</body>
-          <style>${CSScode}</style>
+          <style>
+              body {
+                background-color: white
+              }
+          ${CSScode}
+          </style>
         </html>
       `);
     }, 50);

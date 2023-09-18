@@ -30,5 +30,6 @@ export default async function ChallengeLayout({ params }: Props) {
   const topicData = fetchTopic(params.slug);
   const topic: Topic = await topicData;
 
+
   return <ChallengePage topic={topic} tasksData={tasksData} params={params} session={session} />;
 }
