@@ -18,7 +18,7 @@ export default function TargetAndOutput({ target, output }: { target: string; ou
   // TODO - tab indicator
   return (
     <Flex gap={3} my={3} flexDirection={{ base: "column-reverse", lg: "row" }}>
-      <Card px={5} flexGrow={1}>
+      <Card px={5} flexGrow={1} pb={5}>
         <Tabs>
           <CardHeader color={"gray"} p={0}>
             <TabList pos={"relative"}>
@@ -34,6 +34,16 @@ export default function TargetAndOutput({ target, output }: { target: string; ou
           <TabPanels>
             <TabPanel p={0} position={"relative"}>
               <Box
+                position={"absolute"}
+                w={"100%"}
+                top={0}
+                left={0}
+                display={showDiff ? "block" : "none"}
+                mixBlendMode={"difference"}
+              >
+                <iframe title="target" height={300} sandbox="allow-scripts" width="100%" srcDoc={target} />
+              </Box>
+              {/* <Box
                 pos={"absolute"}
                 bgColor={"black"}
                 top={0}
@@ -43,7 +53,7 @@ export default function TargetAndOutput({ target, output }: { target: string; ou
                 display={showDiff ? "block" : "none"}
               >
                 <iframe title="target" height={300} sandbox="allow-scripts" width="100%" srcDoc={target} />
-              </Box>
+              </Box> */}
               <Box>
                 <iframe title="output" height={300} sandbox="allow-scripts" width="100%" srcDoc={output} />
               </Box>

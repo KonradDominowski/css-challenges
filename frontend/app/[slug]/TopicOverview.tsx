@@ -36,6 +36,7 @@ export default function TopicOverview({ topic, params }: Props) {
             <ListItem key={chapter.id}>{chapter.title}</ListItem>
           ))}
         </UnorderedList>
+        {/* TODO - this link need to point to the first challenge of this topic */}
         <Button as={"a"} href={`${topic.slug}/challenge/1`} my={3} size={"lg"} colorScheme={"green"}>
           Get Started
         </Button>
