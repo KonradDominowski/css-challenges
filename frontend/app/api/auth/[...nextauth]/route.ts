@@ -28,18 +28,14 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async signIn({ user, account, profile, email, credentials }) {
-      return true;
-    },
     async jwt({ token, account, user }) {
-      console.log(account);
       if (account) {
         const response = await axiosInstance.post(`${process.env.BACKEND_URL}/auth/convert-token/`, {
           token: account?.access_token,
           backend: provider[account.provider],
           grant_type: "convert_token",
-          client_id: process.env.DJANGO_ID,
-          client_secret: process.env.DJANGO_SECRET,
+          client_id: process.env.DJANGO_ON_VERCEL_ID,
+          client_secret: process.env.DJANGO_ON_VERCEL_SECRET,
         });
 
         token.accessToken = response.data.access_token;
