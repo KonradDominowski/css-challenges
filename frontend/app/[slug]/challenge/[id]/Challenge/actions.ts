@@ -23,7 +23,7 @@ export async function createCompleteStatus(formData: FormData, session: Session 
         completed: true,
       };
 
-      const res = await fetch(`http://localhost:8000/api/tasks-users/${taskData?.id}/`, {
+      const res = await fetch(`${process.env.LOCAL_URL}/api/tasks-users/${taskData?.id}/`, {
         method: "put",
         body: JSON.stringify(taskData),
         headers: {
@@ -41,7 +41,7 @@ export async function createCompleteStatus(formData: FormData, session: Session 
         completed: true,
       };
 
-      const res = await fetch(`http://localhost:8000/api/tasks-users/`, {
+      const res = await fetch(`${process.env.LOCAL_URL}/api/tasks-users/`, {
         method: "post",
         body: JSON.stringify(taskData),
         headers: {

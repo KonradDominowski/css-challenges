@@ -8,10 +8,10 @@ export default async function CreateChallenge() {
     return <p>This page is only available for the admin.</p>;
   }
 
-  const topicsResponse = await fetch("http://localhost:8000/api/topics/");
+  const topicsResponse = await fetch(`${process.env.LOCAL_URL}/api/topics/`);
   const topics: Topic[] = await topicsResponse.json();
 
-  const chaptersResponse = await fetch("http://localhost:8000/api/chapters/");
+  const chaptersResponse = await fetch(`${process.env.LOCAL_URL}/api/chapters/`);
   const chapters: Chapter[] = await chaptersResponse.json();
 
   return <TaskForm topics={topics} chapters={chapters} />;

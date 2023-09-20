@@ -15,7 +15,7 @@ export default async function Home() {
   let tasksData;
 
   if (session) {
-    const response = await fetch("http://localhost:8000/api/tasks-users/", {
+    const response = await fetch(`${process.env.LOCAL_URL}/api/tasks-users/`, {
       headers: {
         Authorization: `Bearer ${session.accessToken}`,
       },
@@ -25,9 +25,10 @@ export default async function Home() {
     tasksData = await response.json();
   }
 
-  const topicsResponse = await fetch("http://localhost:8000/api/topics/");
+  const topicsResponse = await fetch(`${process.env.LOCAL_URL}/api/topics/`);
   const topics = await topicsResponse.json();
 
+  // TODO - handle the error cases where the backend is not working
   return (
     <>
       <Body topics={topics} />

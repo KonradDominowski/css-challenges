@@ -13,7 +13,8 @@ interface Props {
 }
 
 export default function TopicOverview({ topic, params }: Props) {
-  const taskNumber = topic.chapters!.flatMap((el) => el.tasks).length;
+  const tasks = topic.chapters!.flatMap((el) => el.tasks);
+  const taskNumber = tasks.length;
 
   return (
     <Box className={styles.main} maxW={960} m={"auto"} my={10}>
@@ -36,8 +37,7 @@ export default function TopicOverview({ topic, params }: Props) {
             <ListItem key={chapter.id}>{chapter.title}</ListItem>
           ))}
         </UnorderedList>
-        {/* TODO - this link need to point to the first challenge of this topic */}
-        <Button as={"a"} href={`${topic.slug}/challenge/1`} my={3} size={"lg"} colorScheme={"green"}>
+        <Button as={"a"} href={`${topic.slug}/challenge/${tasks.at(0)?.id}`} my={3} size={"lg"} colorScheme={"green"}>
           Get Started
         </Button>
       </Box>
