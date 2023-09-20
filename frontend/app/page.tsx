@@ -28,6 +28,7 @@ export default async function Home() {
   const topicsResponse = await fetch(`${process.env.BACKEND_URL}/api/topics/`);
   const topics = await topicsResponse.json();
 
+  // TODO - handle the error cases where the backend is not working
   return (
     <>
       <Body topics={topics} />

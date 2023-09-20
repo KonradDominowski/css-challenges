@@ -21,18 +21,16 @@ interface Props {
   };
 }
 
-// TODO - Kiedy się kliknie na opis, może się zwinąć
-// TODO - link do następnego i poprzedniego challengu kieruje na ID w bazie danych, na razie ono istnieje ale kiedyś mogą się pojebać, może zamiast id uży pola order
-export default function Challenge({ params, topic, taskData, session }: Props) {
+export default function Challenge({ params, topic, taskData }: Props) {
   const [HTMLcode, setHTMLcode] = useState<string>(taskData?.html_code || "");
   const [CSScode, setCSScode] = useState<string>(taskData?.css_code || "");
   const [srcDoc, setSrcDoc] = useState<string>("");
   const [showDesc, setShowDesc] = useState(true);
 
-  const task = topic.chapters!.flatMap((chapter) => chapter.tasks).find((task) => task.id === +params.id);
+  const task = topic.chapters!.flatMap((chapter) => chapter.tasks).find((task) => task.id === +params.id)!;
 
   function getNextTaskId(): string | undefined {
-    const tasks = topic.chapters?.flatMap((chapter) => chapter.tasks);
+    const tasks = topic.chapters?.flatMap((chapter) => chapter.tasks)!;
     const currentIndex = tasks.indexOf(task);
 
     if (currentIndex + 1 === tasks?.length) {
@@ -43,7 +41,7 @@ export default function Challenge({ params, topic, taskData, session }: Props) {
   }
 
   function getPreviousTaskId(): string | undefined {
-    const tasks = topic.chapters?.flatMap((chapter) => chapter.tasks);
+    const tasks = topic.chapters?.flatMap((chapter) => chapter.tasks)!;
     const currentIndex = tasks.indexOf(task);
 
     if (currentIndex === 0) {
