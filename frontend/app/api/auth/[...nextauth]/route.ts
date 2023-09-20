@@ -15,6 +15,7 @@ const provider: Providers = {
   google: "google-oauth2",
 };
 
+// TODO - dodaj nowe aplikacje i URL do authentykacji dla githuba i google, potrzebny jest nowy ID i Secret, pewnie też dla Django
 export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET!,
   providers: [
