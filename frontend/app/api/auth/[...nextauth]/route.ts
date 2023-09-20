@@ -6,7 +6,7 @@ import GithubProvider from "next-auth/providers/github";
 import axios from "axios";
 
 const axiosInstance = axios.create({
-  baseURL: `${process.env.LOCAL_URL}/auth/convert-token/`,
+  baseURL: `${process.env.BACKEND_URL}/auth/convert-token/`,
   timeout: 5000,
 });
 
@@ -30,7 +30,7 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async jwt({ token, account, user }) {
       if (account) {
-        const response = await axiosInstance.post(`${process.env.LOCAL_URL}/auth/convert-token/`, {
+        const response = await axiosInstance.post(`${process.env.BACKEND_URL}/auth/convert-token/`, {
           token: account?.access_token,
           backend: provider[account.provider],
           grant_type: "convert_token",

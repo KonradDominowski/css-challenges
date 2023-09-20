@@ -17,7 +17,7 @@ export default async function ChallengeLayout({ params }: Props) {
   let tasksData: TaskData[] | undefined = undefined;
 
   if (session) {
-    const response = await fetch(`${process.env.LOCAL_URL}/api/tasks-users/`, {
+    const response = await fetch(`${process.env.BACKEND_URL}/api/tasks-users/`, {
       headers: {
         Authorization: `Bearer ${session.accessToken}`,
       },
