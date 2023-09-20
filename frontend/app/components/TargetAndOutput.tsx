@@ -15,7 +15,7 @@ import { useState } from "react";
 
 export default function TargetAndOutput({ target, output }: { target: string; output: string }) {
   const [showDiff, setShowDiff] = useState(false);
-  // TODO - tab indicator
+
   return (
     <Flex gap={3} my={3} flexDirection={{ base: "column-reverse", lg: "row" }}>
       <Card px={5} flexGrow={1} pb={5}>
