@@ -17,7 +17,7 @@ export default async function ChallengeLayout({ params }: Props) {
   let tasksData: TaskData[] | undefined = undefined;
 
   if (session) {
-    const response = await fetch("http://localhost:8000/api/tasks-users/", {
+    const response = await fetch(`${process.env.BACKEND_URL}/api/tasks-users/`, {
       headers: {
         Authorization: `Bearer ${session.accessToken}`,
       },
@@ -29,7 +29,6 @@ export default async function ChallengeLayout({ params }: Props) {
 
   const topicData = fetchTopic(params.slug);
   const topic: Topic = await topicData;
-
 
   return <ChallengePage topic={topic} tasksData={tasksData} params={params} session={session} />;
 }

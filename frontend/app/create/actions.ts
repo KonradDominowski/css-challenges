@@ -5,7 +5,7 @@ import { revalidatePath } from "next/cache";
 export default async function createTask(formData: FormData) {
   const data = Object.fromEntries(formData);
   try {
-    const response = await fetch("http://localhost:8000/api/tasks/", {
+    const response = await fetch(`${process.env.BACKEND_URL}/api/tasks/`, {
       method: "post",
       body: JSON.stringify(data),
       headers: {
