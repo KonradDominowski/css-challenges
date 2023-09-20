@@ -34,8 +34,8 @@ export const authOptions: NextAuthOptions = {
           token: account?.access_token,
           backend: provider[account.provider],
           grant_type: "convert_token",
-          client_id: process.env.DJANGO_ON_VERCEL_ID,
-          client_secret: process.env.DJANGO_ON_VERCEL_SECRET,
+          client_id: process.env.DJANGO_ID,
+          client_secret: process.env.DJANGO_SECRET,
         });
 
         token.accessToken = response.data.access_token;
