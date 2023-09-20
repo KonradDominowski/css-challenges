@@ -1,7 +1,9 @@
+from django.conf import settings
+from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 from rest_api.views import (UserDetailsView, TopicListView, TopicView, TaskListView, ChapterListView,
-                            TasksUsersListView, TasksUsersView, UserTaskUpdateView)
+                            TasksUsersView, UserTaskUpdateView)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -15,3 +17,6 @@ urlpatterns = [
     path('api/tasks-users/<int:pk>/', UserTaskUpdateView.as_view(), name='Tasks Users List View'),
     path('api/chapters/', ChapterListView.as_view(), name='Chapter List View')
 ]
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
