@@ -10,7 +10,7 @@ const axiosInstance = axios.create({
   timeout: 5000,
 });
 
-const provider = {
+const provider: Providers = {
   github: "github",
   google: "google-oauth2",
 };
@@ -32,7 +32,7 @@ export const authOptions: NextAuthOptions = {
       if (account) {
         const response = await axiosInstance.post(`${process.env.BACKEND_URL}/auth/convert-token/`, {
           token: account?.access_token,
-          backend: provider[account.provider],
+          backend: provider[account.provider as keyof Providers],
           grant_type: "convert_token",
           client_id: process.env.DJANGO_ID,
           client_secret: process.env.DJANGO_SECRET,
