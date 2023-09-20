@@ -36,5 +36,5 @@ soupsieve==2.4.1
 sqlparse==0.4.4
 tornado==6.3.3
 typing_extensions==4.7.1
-urllib3==2.0.4
+urllib3==1.26.16
 wrapt==1.15.0
