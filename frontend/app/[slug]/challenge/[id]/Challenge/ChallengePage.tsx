@@ -36,7 +36,7 @@ export default function ChallengePage({ params, topic, tasksData, session }: Pro
         completed: true,
       };
 
-      let newTasks = optimisticTasks?.filter((task) => task.task !== +params.id);
+      let newTasks = optimisticTasks?.filter((task) => task.task !== +params.id)!;
       setOptimisticTasks((tasks) => [...newTasks, optimisticTask]);
     } else {
       optimisticTask = {
@@ -46,7 +46,7 @@ export default function ChallengePage({ params, topic, tasksData, session }: Pro
         completed: true,
       };
 
-      setOptimisticTasks((tasks) => [...tasks, optimisticTask]);
+      setOptimisticTasks((tasks) => [...tasks!, optimisticTask]);
     }
 
     const res = await createCompleteStatus(formData, session);

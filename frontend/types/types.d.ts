@@ -36,3 +36,8 @@ interface Topic {
   order?: number;
   is_ready?: boolean;
 }
+
+interface Providers {
+  github: string;
+  google: string;
+}
