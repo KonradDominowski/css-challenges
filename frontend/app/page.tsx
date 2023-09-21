@@ -29,6 +29,7 @@ export default async function Home() {
   const topics = await topicsResponse.json();
 
   // TODO - handle the error cases where the backend is not working
+
   return (
     <>
       <Body topics={topics} />
