@@ -29,7 +29,8 @@ export default async function Home() {
   const topics = await topicsResponse.json();
 
   // TODO - handle the error cases where the backend is not working
-
+  // TODO - why the fuck is it a deceptive site - fix it
+  // TODO - handle adding snippets into the add task form
   return (
     <>
       <Body topics={topics} />

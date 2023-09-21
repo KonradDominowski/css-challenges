@@ -1,7 +1,7 @@
 "use server";
 
 import { Session } from "next-auth";
-import { revalidatePath, revalidateTag } from "next/cache";
+import { revalidateTag } from "next/cache";
 
 // TODO - handle the case where user is not logged in - maybe save the tasks to localstorage or smth
 export async function createCompleteStatus(formData: FormData, session: Session | null) {
