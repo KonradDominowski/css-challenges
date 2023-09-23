@@ -20,7 +20,7 @@ interface Props {
 export default function ChallengePage({ params, topic, tasksData, session }: Props) {
   const toast = useToast();
   const [notLoggedInInfoShown, setNotLoggedInInfoShown] = useState(false);
-  const [optimisticTasks, setOptimisticTasks] = useOptimistic(tasksData);
+  const [optimisticTasks, setOptimisticTasks] = useOptimistic(tasksData || []);
 
   async function onSubmitTask(formData: FormData) {
     const data = Object.fromEntries(formData);
