@@ -6,6 +6,8 @@ from django.contrib.auth.models import User
 class Task(models.Model):
     title = models.CharField(max_length=64, verbose_name='Task title')
     description = models.TextField(verbose_name='Task description')
+    starter_html_code = models.TextField(verbose_name='Starter HTML code', blank=True, null=True)
+    starter_css_code = models.TextField(verbose_name='Starter CSS code', blank=True, null=True)
     target = models.TextField(verbose_name='HTML Target')
     updated = models.DateTimeField(auto_now=True)
     chapter = models.ForeignKey('Chapter', on_delete=models.CASCADE, related_name='tasks')
