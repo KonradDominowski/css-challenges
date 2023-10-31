@@ -1,6 +1,6 @@
 from rest_framework.response import Response
 
-from rest_api.serializers import *
+from .serializers import *
 from rest_framework import generics, status
 
 
@@ -94,3 +94,18 @@ class ChapterListView(generics.ListAPIView):
 class UserDetailsView(generics.ListAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
+
+class ToLearnListView(generics.ListAPIView):
+    queryset = ToLearn.objects.all()
+    serializer_class = ToLearnSerializer
+
+
+class DescriptionBodyListView(generics.ListAPIView):
+    queryset = DescriptionBody.objects.all()
+    serializer_class = DescriptionBodySerializer
+
+
+class DescriptionListView(generics.ListAPIView):
+    queryset = TopicDescription.objects.all()
+    serializer_class = DescriptionSerializer
