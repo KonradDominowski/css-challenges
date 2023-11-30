@@ -86,6 +86,11 @@ class TaskListView(generics.ListCreateAPIView):
     serializer_class = TaskSerializer
 
 
+class TaskView(generics.RetrieveUpdateAPIView):
+    queryset = Task.objects.all()
+    serializer_class = TaskSerializer
+
+
 class ChapterListView(generics.ListAPIView):
     queryset = Chapter.objects.all()
     serializer_class = ChapterSerializer

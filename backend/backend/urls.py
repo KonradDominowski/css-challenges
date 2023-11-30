@@ -4,7 +4,7 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_api.views import (UserDetailsView, TopicListView, TopicView, TaskListView, ChapterListView,
                             TasksUsersView, UserTaskUpdateView, ToLearnListView, DescriptionBodyListView,
-                            DescriptionListView)
+                            DescriptionListView, TaskView)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -14,6 +14,7 @@ urlpatterns = [
     path('api/topics/<int:pk>/', TopicView.as_view(), name='Topic View'),
     path('api/topics/<str:slug>/', TopicView.as_view(), name='Topic View'),
     path('api/tasks/', TaskListView.as_view(), name='Task List View'),
+    path('api/tasks/<int:pk>/', TaskView.as_view(), name='Task View'),
     path('api/tasks-users/', TasksUsersView.as_view(), name='Tasks Users List View'),
     path('api/tasks-users/<int:pk>/', UserTaskUpdateView.as_view(), name='Tasks Users List View'),
     path('api/chapters/', ChapterListView.as_view(), name='Chapter List View'),
