@@ -49,9 +49,11 @@ class DescriptionSerializer(serializers.ModelSerializer):
 #####################################
 
 class TasksUsersSerializer(serializers.ModelSerializer):
+    topic = serializers.PrimaryKeyRelatedField(queryset=Topic.objects.all(), source='task.chapter.topic')
+
     class Meta:
         model = UserTask
-        fields = ('id', 'user', 'task', 'html_code', 'css_code', 'completed')
+        fields = ('id', 'user', 'task', 'html_code', 'css_code', 'completed', 'topic')
 
 
 #############################
@@ -65,6 +67,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class TaskSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Task
         fields = '__all__'
