@@ -30,7 +30,6 @@ class TopicView(generics.GenericAPIView):
 
 
 class TasksUsersView(generics.GenericAPIView):
-    # permission_classes = [permissions.IsAuthenticated]
     serializer_class = TasksUsersSerializer
 
     def get_queryset(self):
@@ -39,7 +38,7 @@ class TasksUsersView(generics.GenericAPIView):
 
     def get(self, request):
         user = request.user
-        query_set = UserTask.objects.filter(user__in=[user.id])
+        query_set = UserTask.objects.filter(user_id=user.id)
         serializer = TasksUsersSerializer(query_set, many=True, context={'request': request})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -49,10 +48,10 @@ class TasksUsersView(generics.GenericAPIView):
         data['user'] = user.id
 
         serializer = TasksUsersSerializer(data=data, context={'request': request})
-
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
+
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -70,6 +69,7 @@ class UserTaskUpdateView(generics.GenericAPIView):
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
+
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
