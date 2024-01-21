@@ -3,11 +3,6 @@ from django.utils.text import slugify
 from django.contrib.auth.models import User
 
 
-# TODO - write description model
-# TODO - write description serializer
-# TODO - add description serializer to topic serializer in the api
-
-
 class Task(models.Model):
     title = models.CharField(max_length=64, verbose_name='Task title')
     description = models.TextField(verbose_name='Task description')
