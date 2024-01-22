@@ -4,6 +4,7 @@ from .serializers import *
 from rest_framework import generics, status
 
 
+# TODO - Many views are not used, maybe remove unused ones
 class TopicListView(generics.GenericAPIView):
     serializer_class = TopicListSerializer
     queryset = Topic.objects.all()
