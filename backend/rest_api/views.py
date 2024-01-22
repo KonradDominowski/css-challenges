@@ -16,18 +16,24 @@ class TopicListView(generics.GenericAPIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-class TopicView(generics.GenericAPIView):
+class TopicDetailView(generics.GenericAPIView):
     serializer_class = TopicSerializer
     queryset = Topic.objects.all()
 
     def get(self, request, pk=0, slug=''):
-        if pk:
-            query_set = Topic.objects.get(pk=pk)
-        if slug:
-            query_set = Topic.objects.get(slug=slug)
-        serializer = TopicSerializer(query_set, context={'request': request})
+        try:
+            if pk:
+                query_set = Topic.objects.get(pk=pk)
+            elif slug:
+                query_set = Topic.objects.get(slug=slug)
+            else:
+                return Response(status=status.HTTP_404_NOT_FOUND)
 
-        return Response(serializer.data, status=status.HTTP_200_OK)
+            serializer = TopicSerializer(query_set, context={'request': request})
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
+        except Topic.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
 
 class TasksUsersView(generics.GenericAPIView):
