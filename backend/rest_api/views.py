@@ -92,6 +92,20 @@ class TaskListView(generics.ListCreateAPIView):
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
 
+    # This method will show errors with serializer if there are any
+    # def post(self, request, *args, **kwargs):
+    #     data = request.data
+    #
+    #     print("TEST")
+    #     serializer = TaskSerializer(data=request.data, context={'request': request})
+    #     if serializer.is_valid():
+    #         print("IS OK")
+    #         serializer.save()
+    #         return Response(serializer.data, status=status.HTTP_201_CREATED)
+    #     print("NOT OK")
+    #     print(serializer.errors)
+    #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 class TaskView(generics.RetrieveUpdateAPIView):
     queryset = Task.objects.all()
