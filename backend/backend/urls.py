@@ -4,7 +4,7 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_api.views import (UserDetailsView, TopicListView, TopicDetailView, TaskListView, ChapterListView,
                             TasksUsersView, UserTaskUpdateView, ToLearnListView, DescriptionBodyListView,
-                            DescriptionListView, TaskView)
+                            DescriptionListView, TaskDetailView)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -13,8 +13,8 @@ urlpatterns = [
     path('api/topics/', TopicListView.as_view(), name='Topic List View'),  # used in frontend
     path('api/topics/<int:pk>/', TopicDetailView.as_view(), name='Topic View'),
     path('api/topics/<str:slug>/', TopicDetailView.as_view(), name='Topic View'),  # used in frontend
-    path('api/tasks/', TaskListView.as_view(), name='Task List View'),
-    path('api/tasks/<int:pk>/', TaskView.as_view(), name='Task View'),  # used in frontend
+    path('api/tasks/', TaskListView.as_view(), name='Task List View'),  # used in frontend
+    path('api/tasks/<int:pk>/', TaskDetailView.as_view(), name='Task View'),  # used in frontend
     path('api/tasks-users/', TasksUsersView.as_view(), name='Tasks Users List View'),  # used in frontend
     path('api/tasks-users/<int:pk>/', UserTaskUpdateView.as_view(), name='Tasks Users List View'),  # used in frontend
     path('api/chapters/', ChapterListView.as_view(), name='Chapter List View'),  # used in frontend

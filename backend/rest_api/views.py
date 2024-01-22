@@ -107,7 +107,7 @@ class TaskListView(generics.ListCreateAPIView):
     #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class TaskView(generics.RetrieveUpdateAPIView):
+class TaskDetailView(generics.RetrieveUpdateAPIView):
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
 

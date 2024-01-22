@@ -58,13 +58,13 @@ class TopicDetailViewTestCase(APITestCase):
 
 class TaskListViewTestCase(APITestCase):
     def setUp(self):
+        self.url = '/api/tasks/'
         self.topic_1, self.topic_2 = Fixtures.create_two_topics()
         self.chapter_1, self.chapter_2 = Fixtures.create_two_chapters(self.topic_1)
         self.task_1, self.task_2 = Fixtures.create_two_tasks(self.chapter_1)
 
     def test_get_task_list(self):
-        url = '/api/tasks/'
-        response = self.client.get(url)
+        response = self.client.get(self.url)
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.data), 2)
@@ -72,7 +72,7 @@ class TaskListViewTestCase(APITestCase):
     def test_post_create_task(self):
         highest_task_order = max(task.order for task in self.chapter_1.tasks.all())
 
-        response = self.client.post('/api/tasks/', {
+        response = self.client.post(self.url, {
             "topic": self.topic_1.id,
             "chapter": self.chapter_1.id,
             "title": "Test title",
@@ -90,7 +90,7 @@ class TaskListViewTestCase(APITestCase):
         highest_task_order = max(task.order for task in self.chapter_1.tasks.all())
 
         # invalid topic id
-        response = self.client.post('/api/tasks/', {
+        response = self.client.post(self.url, {
             "topic": '',
             "chapter": self.chapter_1.id,
             "title": "Test title",
@@ -105,7 +105,7 @@ class TaskListViewTestCase(APITestCase):
         self.assertEqual(Task.objects.count(), 2)
 
         # invalid chapter id
-        response = self.client.post('/api/tasks/', {
+        response = self.client.post(self.url, {
             "topic": self.topic_1.id,
             "chapter": '',
             "title": "Test title",
@@ -120,7 +120,7 @@ class TaskListViewTestCase(APITestCase):
         self.assertEqual(response.status_code, 400)
         self.assertEqual(Task.objects.count(), 2)
 
-        response = self.client.post('/api/tasks/', {
+        response = self.client.post(self.url, {
             "topic": self.topic_1.id,
             "chapter": self.chapter_1.id,
             "title": "",
@@ -135,7 +135,7 @@ class TaskListViewTestCase(APITestCase):
         self.assertEqual(Task.objects.count(), 2)
 
         # empty description
-        response = self.client.post('/api/tasks/', {
+        response = self.client.post(self.url, {
             "topic": self.topic_1.id,
             "chapter": self.chapter_1.id,
             "title": "Test title",
@@ -150,7 +150,7 @@ class TaskListViewTestCase(APITestCase):
         self.assertEqual(Task.objects.count(), 2)
 
         # empty target code
-        response = self.client.post('/api/tasks/', {
+        response = self.client.post(self.url, {
             "topic": self.topic_1.id,
             "chapter": self.chapter_1.id,
             "title": "Test title",
@@ -165,7 +165,7 @@ class TaskListViewTestCase(APITestCase):
         self.assertEqual(Task.objects.count(), 2)
 
         # chapter-order has to be unique
-        response = self.client.post('/api/tasks/', {
+        response = self.client.post(self.url, {
             "topic": self.topic_1.id,
             "chapter": self.chapter_1.id,
             "title": "Test title",
@@ -178,3 +178,114 @@ class TaskListViewTestCase(APITestCase):
 
         self.assertEqual(response.status_code, 400)
         self.assertEqual(Task.objects.count(), 2)
+
+
+class TaskDetailViewTest(APITestCase):
+    def setUp(self):
+        self.topic_1, self.topic_2 = Fixtures.create_two_topics()
+        self.chapter_1, self.chapter_2 = Fixtures.create_two_chapters(self.topic_1)
+        self.task_1, self.task_2 = Fixtures.create_two_tasks(self.chapter_1)
+
+    def test_get_task_by_id(self):
+        url_1 = f'/api/tasks/{self.task_1.id}/'
+        url_2 = f'/api/tasks/{self.task_2.id}/'
+        response_1 = self.client.get(url_1)
+        response_2 = self.client.get(url_2)
+
+        self.assertEqual(response_1.status_code, 200)
+        self.assertEqual(response_2.status_code, 200)
+
+    def test_get_task_with_invalid_id(self):
+        tasks_ids = [task.id for task in Task.objects.all()]
+        invalid_id = max(tasks_ids) + 1
+
+        url_1 = f'/api/topics/{invalid_id}/'
+        response = self.client.get(url_1)
+
+        self.assertEqual(response.status_code, 404)
+
+    def test_update_task(self):
+        response = self.client.put(f'/api/tasks/{self.task_1.id}/', {
+            "topic": self.task_1.chapter.topic.id,
+            "chapter": self.task_1.chapter.id,
+            "title": "Updated title",
+            "description": "Updated description",
+            "starter_html_code": "",
+            "starter_css_code": "",
+            "target": "Test code",
+            "order": self.task_1.order,
+        })
+
+        self.task_1.refresh_from_db()
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(self.task_1.title, "Updated title")
+        self.assertEqual(self.task_1.description, "Updated description")
+
+    def test_update_task_with_invalid_data(self):
+        # invalid topic id
+        response = self.client.put(f'/api/tasks/{self.task_1.id}/', {
+            "topic": "",
+            "chapter": self.task_1.chapter.id,
+            "title": "Updated title",
+            "description": "Updated description",
+            "starter_html_code": "",
+            "starter_css_code": "",
+            "target": "Test code",
+            "order": self.task_1.order,
+        })
+
+        self.assertEqual(response.status_code, 400)
+
+        # invalid chapter id
+        response = self.client.put(f'/api/tasks/{self.task_1.id}/', {
+            "topic": self.task_1.chapter.topic.id,
+            "chapter": "",
+            "title": "Updated title",
+            "description": "Updated description",
+            "starter_html_code": "",
+            "starter_css_code": "",
+            "target": "Test code",
+            "order": self.task_1.order,
+        })
+
+        self.assertEqual(response.status_code, 400)
+
+        # empty title
+        response = self.client.put(f'/api/tasks/{self.task_1.id}/', {
+            "topic": self.task_1.chapter.topic.id,
+            "chapter": self.task_1.chapter.id,
+            "title": "",
+            "description": "Updated description",
+            "starter_html_code": "",
+            "starter_css_code": "",
+            "target": "Test code",
+            "order": self.task_1.order,
+        })
+
+        self.assertEqual(response.status_code, 400)
+
+        # empty description
+        response = self.client.put(f'/api/tasks/{self.task_1.id}/', {
+            "topic": self.task_1.chapter.topic.id,
+            "chapter": self.task_1.chapter.id,
+            "title": "Updated title",
+            "description": "",
+            "starter_html_code": "",
+            "starter_css_code": "",
+            "target": "Test code",
+            "order": self.task_1.order,
+        })
+
+        # empty target code
+        response = self.client.put(f'/api/tasks/{self.task_1.id}/', {
+            "topic": self.task_1.chapter.topic.id,
+            "chapter": self.task_1.chapter.id,
+            "title": "Updated title",
+            "description": "Updated description",
+            "starter_html_code": "",
+            "starter_css_code": "",
+            "target": "",
+            "order": self.task_1.order,
+        })
+
+        self.assertEqual(response.status_code, 400)
