@@ -1,18 +1,23 @@
-import json
+from django.db.models import Max
+from django.urls import reverse
 
-from rest_framework.test import APITestCase
+from rest_framework.test import APITestCase, APIRequestFactory, force_authenticate
 
 from .fixtures import Fixtures
-from ..models import Topic, Task
+from ..models import Topic, Task, UserTask
+from ..views import UserTasksListView, UserTaskUpdateView
 
 
 class TopicListViewTestCase(APITestCase):
     def setUp(self):
+        self.url = '/api/topics/'
         Fixtures.create_two_topics()
 
+    def test_url(self):
+        self.assertEqual(reverse('Topic List View'), self.url)
+
     def test_get_topic_list(self):
-        url = '/api/topics/'
-        response = self.client.get(url)
+        response = self.client.get(self.url)
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.data), 2)
@@ -21,6 +26,10 @@ class TopicListViewTestCase(APITestCase):
 class TopicDetailViewTestCase(APITestCase):
     def setUp(self):
         self.topic_1, self.topic_2 = Fixtures.create_two_topics()
+
+    def test_url(self):
+        self.assertEqual(reverse('Topic View', kwargs={'pk': self.topic_1.id}),
+                         f'/api/topics/{self.topic_1.id}/')
 
     def test_get_topic_by_id(self):
         url_1 = f'/api/topics/{self.topic_1.id}/'
@@ -41,8 +50,7 @@ class TopicDetailViewTestCase(APITestCase):
         self.assertEqual(response_2.status_code, 200)
 
     def test_get_topic_with_invalid_id(self):
-        topic_ids = [topic.id for topic in Topic.objects.all()]
-        invalid_id = max(topic_ids) + 1
+        invalid_id = Topic.objects.all().aggregate(Max('id'))['id__max'] + 1
 
         url_1 = f'/api/topics/{invalid_id}/'
         response = self.client.get(url_1)
@@ -62,6 +70,9 @@ class TaskListViewTestCase(APITestCase):
         self.topic_1, self.topic_2 = Fixtures.create_two_topics()
         self.chapter_1, self.chapter_2 = Fixtures.create_two_chapters(self.topic_1)
         self.task_1, self.task_2 = Fixtures.create_two_tasks(self.chapter_1)
+
+    def test_url(self):
+        self.assertEqual(reverse('Task List View'), self.url)
 
     def test_get_task_list(self):
         response = self.client.get(self.url)
@@ -186,6 +197,10 @@ class TaskDetailViewTest(APITestCase):
         self.chapter_1, self.chapter_2 = Fixtures.create_two_chapters(self.topic_1)
         self.task_1, self.task_2 = Fixtures.create_two_tasks(self.chapter_1)
 
+    def test_url(self):
+        self.assertEqual(reverse('Task View', kwargs={'pk': self.task_1.id}),
+                         f'/api/tasks/{self.task_1.id}/')
+
     def test_get_task_by_id(self):
         url_1 = f'/api/tasks/{self.task_1.id}/'
         url_2 = f'/api/tasks/{self.task_2.id}/'
@@ -276,6 +291,8 @@ class TaskDetailViewTest(APITestCase):
             "order": self.task_1.order,
         })
 
+        self.assertEqual(response.status_code, 400)
+
         # empty target code
         response = self.client.put(f'/api/tasks/{self.task_1.id}/', {
             "topic": self.task_1.chapter.topic.id,
@@ -289,3 +306,158 @@ class TaskDetailViewTest(APITestCase):
         })
 
         self.assertEqual(response.status_code, 400)
+
+
+class UserTasksListViewTestCase(APITestCase):
+    def setUp(self):
+        self.factory = APIRequestFactory()
+        self.url = '/api/tasks-users/'
+        self.topic_1, self.topic_2 = Fixtures.create_two_topics()
+        self.chapter_1, self.chapter_2 = Fixtures.create_two_chapters(self.topic_1)
+        self.task_1, self.task_2 = Fixtures.create_two_tasks(self.chapter_1)
+        self.user_1, self.user_2 = Fixtures.create_two_users()
+        UserTask.objects.create(user=self.user_1, task=self.task_1)
+        UserTask.objects.create(user=self.user_1, task=self.task_2)
+
+    def test_url(self):
+        self.assertEqual(reverse('Tasks Users List View'), self.url)
+
+    def test_get_user_tasks_list(self):
+        view = UserTasksListView.as_view()
+        request = self.factory.get(self.url)
+
+        force_authenticate(request, user=self.user_1)
+        response = view(request)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.data), 2)
+
+        force_authenticate(request, user=self.user_2)
+        response = view(request)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.data), 0)
+
+    def test_get_without_authentication_is_forbidden(self):
+        response = self.client.get(self.url)
+
+        self.assertEqual(response.status_code, 401)
+
+    def test_post_create_user_task(self):
+        view = UserTasksListView.as_view()
+
+        request = self.factory.post(self.url, {
+            'task': self.task_1.id,
+            'html_code': "Test html code",
+            'css_code': 'Test html code',
+            'completed': True,
+        }, format='json')
+
+        force_authenticate(request, user=self.user_2)
+        response = view(request)
+
+        self.assertEqual(response.status_code, 201)
+
+    def test_user_task_is_unique(self):
+        view = UserTasksListView.as_view()
+
+        request = self.factory.post(self.url, {
+            'task': self.task_1.id,
+            'html_code': "Test html code",
+            'css_code': 'Test html code',
+            'completed': True,
+        }, format='json')
+
+        force_authenticate(request, user=self.user_1)
+        response = view(request)
+
+        self.assertEqual(response.status_code, 400)
+
+    def test_post_create_user_task_with_invalid_data(self):
+        view = UserTasksListView.as_view()
+
+        # invalid task id
+        invalid_task_id = Task.objects.all().aggregate(Max('id'))['id__max'] + 1
+        request = self.factory.post(self.url, {
+            'task': invalid_task_id,
+            'html_code': "Test html code",
+            'css_code': 'Test html code',
+            'completed': True,
+        }, format='json')
+
+        force_authenticate(request, user=self.user_2)
+        response = view(request)
+
+        self.assertEqual(response.status_code, 400)
+
+
+class UserTaskUpdateViewTestCase(APITestCase):
+    def setUp(self):
+        self.url = '/api/tasks-users/'
+        self.factory = APIRequestFactory()
+        self.topic_1, self.topic_2 = Fixtures.create_two_topics()
+        self.chapter_1, self.chapter_2 = Fixtures.create_two_chapters(self.topic_1)
+        self.task_1, self.task_2 = Fixtures.create_two_tasks(self.chapter_1)
+        self.user_1, self.user_2 = Fixtures.create_two_users()
+        self.user_task_1 = UserTask.objects.create(user=self.user_1, task=self.task_1)
+        self.user_task_2 = UserTask.objects.create(user=self.user_1, task=self.task_2)
+        self.user_task_3 = UserTask.objects.create(user=self.user_2, task=self.task_1)
+
+    def test_url(self):
+        self.assertEqual(reverse('User Task View', kwargs={'pk': self.user_task_1.id}),
+                         self.url + f'{self.user_task_1.id}/')
+
+    def test_update_with_different_user(self):
+        view = UserTaskUpdateView.as_view()
+
+        # different user
+        url = f'/api/tasks-users/{self.user_task_1.id}/'
+        request = self.factory.put(url, {
+            'task': self.user_task_1.task.id,
+            'html_code': "Test html code",
+            'css_code': 'Test html code',
+            'completed': True,
+        }, format='json')
+
+        force_authenticate(request, user=self.user_2)
+        response = view(request, pk=self.user_task_1.id)
+
+        self.assertEqual(response.status_code, 403)
+
+    def test_update_user_task_with_invalid_id(self):
+        view = UserTaskUpdateView.as_view()
+
+        # invalid UserTask id
+        invalid_user_task_id = UserTask.objects.all().aggregate(Max('id'))['id__max'] + 1
+        url = f'/api/tasks-users/{self.user_task_1.id}/'
+
+        request = self.factory.put(url, {
+            'task': self.user_task_1.task.id,
+            'html_code': "Test html code",
+            'css_code': 'Test html code',
+            'completed': True,
+        }, format='json')
+
+        force_authenticate(request, user=self.user_1)
+        response = view(request, pk=invalid_user_task_id)
+
+        self.assertEqual(response.status_code, 404)
+
+    def test_update_user_task(self):
+        view = UserTaskUpdateView.as_view()
+
+        url = f'/api/tasks-users/{self.user_task_1.id}/'
+        request = self.factory.put(url, {
+            'task': self.user_task_1.task.id,
+            'html_code': "New updated html code",
+            'css_code': 'New updated html code',
+            'completed': True,
+        }, format='json')
+
+        force_authenticate(request, user=self.user_1)
+        response = view(request, pk=self.user_task_1.id)
+
+        self.user_task_1.refresh_from_db()
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(self.user_task_1.html_code, 'New updated html code')
+        self.assertEqual(self.user_task_1.css_code, 'New updated html code')
