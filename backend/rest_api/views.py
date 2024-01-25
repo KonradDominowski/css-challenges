@@ -2,9 +2,9 @@ from rest_framework.response import Response
 
 from .serializers import *
 from rest_framework import generics, status
+from rest_framework.permissions import IsAuthenticated
 
 
-# TODO - Many views are not used, maybe remove unused ones
 class TopicListView(generics.GenericAPIView):
     serializer_class = TopicListSerializer
     queryset = Topic.objects.all()
@@ -36,7 +36,8 @@ class TopicDetailView(generics.GenericAPIView):
             return Response(status=status.HTTP_404_NOT_FOUND)
 
 
-class TasksUsersView(generics.GenericAPIView):
+class UserTasksListView(generics.GenericAPIView):
+    permission_classes = [IsAuthenticated]
     serializer_class = TasksUsersSerializer
 
     def get_queryset(self):
@@ -57,9 +58,9 @@ class TasksUsersView(generics.GenericAPIView):
         serializer = TasksUsersSerializer(data=data, context={'request': request})
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
-
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class UserTaskUpdateView(generics.GenericAPIView):
@@ -71,21 +72,21 @@ class UserTaskUpdateView(generics.GenericAPIView):
         data = request.data
         data['user'] = user.id
 
-        task = UserTask.objects.get(pk=pk)
-        serializer = TasksUsersSerializer(task, data=request.data, context={'request': request})
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
+        try:
+            task = UserTask.objects.get(pk=pk)
 
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            if user != task.user:
+                return Response(status=status.HTTP_403_FORBIDDEN)
 
+            serializer = TasksUsersSerializer(task, data=request.data, context={'request': request})
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            else:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class TasksUsersListView(generics.ListCreateAPIView):
-    serializer_class = TasksUsersSerializer
-
-    def get_queryset(self):
-        query_set = UserTask.objects.filter(user__in=[self.request.user.id])
-        return query_set
+        except UserTask.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
 
 class TaskListView(generics.ListCreateAPIView):
@@ -115,23 +116,3 @@ class TaskDetailView(generics.RetrieveUpdateAPIView):
 class ChapterListView(generics.ListAPIView):
     queryset = Chapter.objects.all()
     serializer_class = ChapterSerializer
-
-
-class UserDetailsView(generics.ListAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-
-
-class ToLearnListView(generics.ListAPIView):
-    queryset = ToLearn.objects.all()
-    serializer_class = ToLearnSerializer
-
-
-class DescriptionBodyListView(generics.ListAPIView):
-    queryset = DescriptionBody.objects.all()
-    serializer_class = DescriptionBodySerializer
-
-
-class DescriptionListView(generics.ListAPIView):
-    queryset = TopicDescription.objects.all()
-    serializer_class = DescriptionSerializer
