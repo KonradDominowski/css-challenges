@@ -67,7 +67,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class TaskSerializer(serializers.ModelSerializer):
-    topic = serializers.PrimaryKeyRelatedField(queryset=Topic.objects.all(), source='chapter.topic', required=False)
+    topic = serializers.PrimaryKeyRelatedField(queryset=Topic.objects.all(), source='chapter.topic')
 
     class Meta:
         model = Task

@@ -2,6 +2,7 @@ from rest_framework.response import Response
 
 from .serializers import *
 from rest_framework import generics, status
+from rest_framework.permissions import IsAuthenticated
 
 
 class TopicListView(generics.GenericAPIView):
@@ -15,21 +16,28 @@ class TopicListView(generics.GenericAPIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-class TopicView(generics.GenericAPIView):
+class TopicDetailView(generics.GenericAPIView):
     serializer_class = TopicSerializer
     queryset = Topic.objects.all()
 
     def get(self, request, pk=0, slug=''):
-        if pk:
-            query_set = Topic.objects.get(pk=pk)
-        if slug:
-            query_set = Topic.objects.get(slug=slug)
-        serializer = TopicSerializer(query_set, context={'request': request})
+        try:
+            if pk:
+                query_set = Topic.objects.get(pk=pk)
+            elif slug:
+                query_set = Topic.objects.get(slug=slug)
+            else:
+                return Response(status=status.HTTP_404_NOT_FOUND)
 
-        return Response(serializer.data, status=status.HTTP_200_OK)
+            serializer = TopicSerializer(query_set, context={'request': request})
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
+        except Topic.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
 
-class TasksUsersView(generics.GenericAPIView):
+class UserTasksListView(generics.GenericAPIView):
+    permission_classes = [IsAuthenticated]
     serializer_class = TasksUsersSerializer
 
     def get_queryset(self):
@@ -50,9 +58,9 @@ class TasksUsersView(generics.GenericAPIView):
         serializer = TasksUsersSerializer(data=data, context={'request': request})
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
-
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class UserTaskUpdateView(generics.GenericAPIView):
@@ -64,29 +72,43 @@ class UserTaskUpdateView(generics.GenericAPIView):
         data = request.data
         data['user'] = user.id
 
-        task = UserTask.objects.get(pk=pk)
-        serializer = TasksUsersSerializer(task, data=request.data, context={'request': request})
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
+        try:
+            task = UserTask.objects.get(pk=pk)
 
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            if user != task.user:
+                return Response(status=status.HTTP_403_FORBIDDEN)
 
+            serializer = TasksUsersSerializer(task, data=request.data, context={'request': request})
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            else:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class TasksUsersListView(generics.ListCreateAPIView):
-    serializer_class = TasksUsersSerializer
-
-    def get_queryset(self):
-        query_set = UserTask.objects.filter(user__in=[self.request.user.id])
-        return query_set
+        except UserTask.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
 
 class TaskListView(generics.ListCreateAPIView):
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
 
+    # This method will show errors with serializer if there are any
+    # def post(self, request, *args, **kwargs):
+    #     data = request.data
+    #
+    #     print("TEST")
+    #     serializer = TaskSerializer(data=request.data, context={'request': request})
+    #     if serializer.is_valid():
+    #         print("IS OK")
+    #         serializer.save()
+    #         return Response(serializer.data, status=status.HTTP_201_CREATED)
+    #     print("NOT OK")
+    #     print(serializer.errors)
+    #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class TaskView(generics.RetrieveUpdateAPIView):
+
+class TaskDetailView(generics.RetrieveUpdateAPIView):
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
 
@@ -94,23 +116,3 @@ class TaskView(generics.RetrieveUpdateAPIView):
 class ChapterListView(generics.ListAPIView):
     queryset = Chapter.objects.all()
     serializer_class = ChapterSerializer
-
-
-class UserDetailsView(generics.ListAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-
-
-class ToLearnListView(generics.ListAPIView):
-    queryset = ToLearn.objects.all()
-    serializer_class = ToLearnSerializer
-
-
-class DescriptionBodyListView(generics.ListAPIView):
-    queryset = DescriptionBody.objects.all()
-    serializer_class = DescriptionBodySerializer
-
-
-class DescriptionListView(generics.ListAPIView):
-    queryset = TopicDescription.objects.all()
-    serializer_class = DescriptionSerializer
