@@ -4,7 +4,7 @@ from django.urls import reverse
 from rest_framework.test import APITestCase, APIRequestFactory, force_authenticate
 
 from .fixtures import Fixtures
-from ..models import Topic, Task, UserTask
+from ..models import Topic, Task, UserTask, Chapter
 from ..views import UserTasksListView, UserTaskUpdateView
 
 
@@ -62,6 +62,22 @@ class TopicDetailViewTestCase(APITestCase):
         response = self.client.get(url_1)
 
         self.assertEqual(response.status_code, 404)
+
+
+class ChapterListViewTestCase(APITestCase):
+    def setUp(self):
+        self.url = '/api/chapters/'
+        self.topic_1, self.topic_2 = Fixtures.create_two_topics()
+        self.chapter_1, self.chapter_2 = Fixtures.create_two_chapters(self.topic_1)
+
+    def test_url(self):
+        self.assertEqual(reverse('Chapter List View'), self.url)
+
+    def test_get_chapters(self):
+        response = self.client.get(self.url)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.data), 2)
 
 
 class TaskListViewTestCase(APITestCase):
